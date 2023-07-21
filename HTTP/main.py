@@ -9,12 +9,11 @@ import requests
 class Handler(BaseHTTPRequestHandler):
 
     def log_message(self, format, *args):
-        message = format % args
         with open('server.log', 'a') as f:
             f.write("%s - - [%s] %s\n" %
                          (self.address_string(),
                           self.log_date_time_string(),
-                          message.translate(self._control_char_table)))
+                          format%args))
 
     def write_in_file(self, file, msg):
         print(f"new message recieved on {datetime.now()}", file=file)
@@ -46,7 +45,7 @@ class Handler(BaseHTTPRequestHandler):
             self.respond(HTTPStatus.BAD_REQUEST, 'error parsing content!')
             return
 
-        with open(self.path[1:] + ".txt", 'a') as f:
+        with open(self.path[1:].replace('/', ' ') + ".txt", 'a') as f:
             self.write_in_file(f, msg)
 
         self.respond()
