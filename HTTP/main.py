@@ -57,7 +57,7 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     PORT = 8000
-    my_server = HTTPServer(("127.0.0.1", PORT), Handler)
+    my_server = HTTPServer(("0.0.0.0", PORT), Handler)
     print(f"Server started at {PORT}")
     threading.Thread(target=my_server.serve_forever).start()
 
