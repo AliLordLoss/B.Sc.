@@ -1,0 +1,14 @@
+certifi==2023.5.7
+charset-normalizer==3.2.0
+idna==3.4
+paho-mqtt==1.6.1
+pip-autoremove==0.10.0
+ply==3.11
+pyasn1==0.4.8
+pycryptodomex==3.18.0
+pymodbus==3.4.1
+pysmi==0.3.4
+pysnmp==4.4.12
+python-dotenv==1.0.0
+requests==2.31.0
+urllib3==2.0.4
