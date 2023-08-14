@@ -37,8 +37,11 @@ while True:
         client.publish(topic, payload=payload, qos=0, retain=False)
     elif option == "3":
         topic = input("Please enter the topic you want to see:\n")
-        with open(topic + ".txt", 'r') as f:
-            print(f.readlines())
+        try:
+            with open(topic + ".txt", 'r') as f:
+                print(*f.readlines(), sep='')
+        except FileNotFoundError:
+            print('There are no messages on this topic yet :(')
     elif option == "0":
         break
     else:
