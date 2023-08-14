@@ -27,7 +27,7 @@ client.connect(message_broker, 1883, 60)
 client.loop_start()
 
 while True:
-    option = input("Please pick one of the options below:\n  1. subscribe to a topic\n  2. publish a message to a topic\n  4. show recieved messages of a topic\n  0. exit\n")
+    option = input("Please pick one of the options below:\n  1. subscribe to a topic\n  2. publish a message to a topic\n  3. show received messages of a topic\n  0. exit\n")
     if option == "1":
         topic = input("Please enter the topic you want to subscribe to:\n")
         client.subscribe(topic)
