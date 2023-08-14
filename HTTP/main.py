@@ -55,8 +55,9 @@ class Handler(BaseHTTPRequestHandler):
             self.respond(HTTPStatus.BAD_REQUEST, 'error parsing content!')
             return
         
-        print(f'### New message on topic {msg.topic}!')
-        with open(self.path[1:].replace('/', ' ') + ".txt", 'a') as f:
+        topic = self.path[1:].replace('/', ' ')
+        print(f'### New message on topic {topic}!')
+        with open(topic + ".txt", 'a') as f:
             self.write_in_file(f, msg)
 
         self.respond()
