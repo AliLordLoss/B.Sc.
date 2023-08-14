@@ -57,16 +57,12 @@ while True:
     print('---')
     if not agent:
         agent = input('Please enter the ip address of the device you want to connect to:\n')
-    else:
-        changeAgent = input(f'Do you want to change the ip address?[y/N]\nCurrent ip address is: {agent}\n')
-        if changeAgent.lower() == 'y':
-            agent = ''
-        elif changeAgent.lower() == 'n' or changeAgent == '':
-            print('ip address not changed!')
-        else:
-            print('Invalid answer! Assuming no change was intended.')
-    
-    cmd = input(f'Please select an option below:\n  1. get a MIB from {agent}\n  2. set a MIB of {agent}\n  3. exit the program\n')
+
+    instructions = f'Please select an option below:\n  1. get a MIB from {agent}\n  2. set a MIB of {agent}\n'
+    if agent:
+        instructions += '  3. change the ip address\n'
+    instructions += '  0. exit the program\n'
+    cmd = input(instructions)
     if cmd == '1':
         OID = input('Please enter the OID of the object you wish to get:\n')
         getsnmp(agent, OID)
@@ -84,6 +80,8 @@ while True:
         value = input('Please enter the value you wish to set for this object:\n')
         setsnmp(agent, OID, dataType, value)
     elif cmd == '3':
+        agent = input('Please enter the ip address of the device you want to connect to:\n')
+    elif cmd == '0':
         print('Bye!')
         break
     else:
