@@ -4,7 +4,17 @@ from datetime import datetime
 import json
 import threading
 import requests
+import socket
+import fcntl
+import struct
 
+def get_ip_address(ifname):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(
+        s.fileno(),
+        0x8915,  # SIOCGIFADDR
+        struct.pack('256s', bytes(ifname[:15], 'utf-8'))
+    )[20:24])
 
 class Handler(BaseHTTPRequestHandler):
 
@@ -16,7 +26,7 @@ class Handler(BaseHTTPRequestHandler):
                           format%args))
 
     def write_in_file(self, file, msg):
-        print(f"new message recieved on {datetime.now()}", file=file)
+        print(f"new message received on {datetime.now()}", file=file)
         print(f"payload: {msg}\n", file=file)
 
     def respond(self, status=200, msg='ok'):
@@ -44,7 +54,8 @@ class Handler(BaseHTTPRequestHandler):
         except:
             self.respond(HTTPStatus.BAD_REQUEST, 'error parsing content!')
             return
-
+        
+        print(f'### New message on topic {msg.topic}!')
         with open(self.path[1:].replace('/', ' ') + ".txt", 'a') as f:
             self.write_in_file(f, msg)
 
@@ -57,17 +68,25 @@ class Handler(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     PORT = 8000
     my_server = HTTPServer(("0.0.0.0", PORT), Handler)
-    print(f"Server started at {PORT}")
+    print(f"### Server started")
+    print(f"### The IP of your device is: {get_ip_address('wlan0')}") # wlan0 is the network interface of Raspberry Pi that connects them to the Wi-Fi. Change it according to your own need.
     threading.Thread(target=my_server.serve_forever).start()
 
     while True:
-        option = input("Please pick one of the options below:\n  1. send a message to another device\n  2. exit\n")
+        option = input("Please pick one of the options below:\n  1. send a message to another device\n  2. show received messages of a topic\n  0. exit\n")
         if option == "1":
             device_ip = input("Please enter the ip address of the device you want to message:\n")
-            title = input("Please enter the title of your message:\n")
+            title = input("Please enter the topic of your message:\n")
             payload = input("Please enter your message:\n")
             requests.post(f"http://{device_ip}:{PORT}/{title}", f'{{"data": "{payload}"}}', headers={'content-type': 'application/json'})
         elif option == "2":
+            topic = input("Please enter the topic you want to see:\n")
+            try:
+                with open(topic + ".txt", 'r') as f:
+                    print(*f.readlines(), sep='')
+            except FileNotFoundError:
+                print('There are no messages on this topic yet :(')
+        elif option == "0":
             my_server.shutdown()
             break
         else:
