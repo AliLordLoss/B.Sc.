@@ -7,14 +7,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def write_in_file(file, msg):
-    print(f"new message recieved on {datetime.now()}", file=file)
+    print(f"new message received on {datetime.now()}", file=file)
     print(f"payload: {msg}\n", file=file)
 
 def on_connect(client, userdata, flags, rc):
-    print(f"Connected with result code {rc}")
+    print(f"### Connected to broker with result code {rc}")
 
 def on_message(client, userdata, msg):
-    print(f'### new message on topic {msg.topic}!')
+    print(f'### New message on topic {msg.topic}!')
     with open(msg.topic + ".txt", 'a') as f:
         write_in_file(f, msg.payload.decode('ascii'))
 
