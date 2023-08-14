@@ -14,6 +14,7 @@ def on_connect(client, userdata, flags, rc):
     print(f"Connected with result code {rc}")
 
 def on_message(client, userdata, msg):
+    print(f'### new message on topic {msg.topic}!')
     with open(msg.topic + ".txt", 'a') as f:
         write_in_file(f, msg.payload.decode('ascii'))
 
