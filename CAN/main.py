@@ -16,6 +16,7 @@ def rcv(bus, stop_event):
         data = bus.recv(3)
         if data is None:
             continue
+        data = [item for item in data.data]
         data = ''.join(map(chr, data))
         topic, msg = data.split(',')
         with open(topic + ".txt", 'a') as f:
