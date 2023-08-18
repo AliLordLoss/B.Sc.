@@ -28,7 +28,8 @@ bus = can.interface.Bus(channel=channel, bustype=bustype, bitrate=125000)
 
 stop_event = threading.Event()
 
-threading.Thread(target=rcv, args=(bus, stop_event, )).start()
+receiver = threading.Thread(target=rcv, args=(bus, stop_event, ))
+receiver.start()
 
 while True:
     cmd = input('Please select one of the options below:\n  1. Send a message\n  2. See received messages of a topic\n  0. exit\n')
@@ -47,6 +48,7 @@ while True:
             print('There are no messages on this topic yet :(')
     elif cmd == '0':
         stop_event.set()
+        receiver.join()
         bus.shutdown()
         break
     else:
