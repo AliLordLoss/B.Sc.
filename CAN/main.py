@@ -21,7 +21,8 @@ bustype = 'socketcan'
 channel = 'can0'
 bus = can.interface.Bus(channel=channel, bustype=bustype, bitrate=125000)
 
-receiver = threading.Thread(target=rcv, args=(bus, )).start()
+receiver = threading.Thread(target=rcv, args=(bus, ))
+receiver.start()
 
 while True:
     cmd = input('Please select one of the options below:\n  1. Send a message\n  2. See received messages of a topic\n  0. exit\n')
