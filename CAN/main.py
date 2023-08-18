@@ -8,9 +8,14 @@ def write_in_file(file, msg):
         print(f"payload: {msg}\n", file=file)
 
 
-def rcv(bus):
+def rcv(bus, stop_event):
     while True:
-        data = bus.recv()
+        if stop_event.is_set():
+            break
+
+        data = bus.recv(3)
+        if data is None:
+            continue
         data = ''.join(map(chr, data))
         topic, msg = data.split(',')
         with open(topic + ".txt", 'a') as f:
@@ -21,8 +26,9 @@ bustype = 'socketcan'
 channel = 'can0'
 bus = can.interface.Bus(channel=channel, bustype=bustype, bitrate=125000)
 
-receiver = threading.Thread(target=rcv, args=(bus, ))
-receiver.start()
+stop_event = threading.Event()
+
+threading.Thread(target=rcv, args=(bus, stop_event, )).start()
 
 while True:
     cmd = input('Please select one of the options below:\n  1. Send a message\n  2. See received messages of a topic\n  0. exit\n')
@@ -40,9 +46,8 @@ while True:
         except FileNotFoundError:
             print('There are no messages on this topic yet :(')
     elif cmd == '0':
-        print('Waiting for receiver to stop...')
-        receiver.join()
-        print('Receiver stopped!')
+        stop_event.set()
+        bus.shutdown()
         break
     else:
         print('Invalid option!')
