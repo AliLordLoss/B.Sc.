@@ -21,7 +21,7 @@ bustype = 'socketcan'
 channel = 'can0'
 bus = can.interface.Bus(channel=channel, bustype=bustype, bitrate=125000)
 
-threading.Thread(target=rcv, args=(bus, )).start()
+receiver = threading.Thread(target=rcv, args=(bus, )).start()
 
 while True:
     cmd = input('Please select one of the options below:\n  1. Send a message\n  2. See received messages of a topic\n  0. exit\n')
@@ -39,6 +39,9 @@ while True:
         except FileNotFoundError:
             print('There are no messages on this topic yet :(')
     elif cmd == '0':
+        print('Waiting for receiver to stop...')
+        receiver.join()
+        print('Receiver stopped!')
         break
     else:
         print('Invalid option!')
