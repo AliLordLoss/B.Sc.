@@ -16,9 +16,13 @@ def rcv(bus, stop_event):
         data = bus.recv(3)
         if data is None:
             continue
+        print('### New message received!')
         data = [item for item in data.data]
         data = ''.join(map(chr, data))
-        topic, msg = data.split(',')
+        try:
+            topic, msg = data.split(',')
+        except ValueError:
+            print('### The received message is in an invalid format!')
         with open(topic + ".txt", 'a') as f:
             write_in_file(f, msg)
 
