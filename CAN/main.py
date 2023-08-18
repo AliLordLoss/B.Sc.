@@ -47,9 +47,11 @@ while True:
         except FileNotFoundError:
             print('There are no messages on this topic yet :(')
     elif cmd == '0':
+        print('Shutting down socket, please wait...')
         stop_event.set()
         receiver.join()
         bus.shutdown()
+        print('Shut down complete, Bye!')
         break
     else:
         print('Invalid option!')
