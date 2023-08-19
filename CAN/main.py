@@ -21,10 +21,10 @@ def rcv(bus, stop_event):
         data = ''.join(map(chr, data))
         try:
             topic, msg = data.split(',')
+            with open(topic + ".txt", 'a') as f:
+                write_in_file(f, msg)
         except ValueError:
             print('### The received message is in an invalid format!')
-        with open(topic + ".txt", 'a') as f:
-            write_in_file(f, msg)
 
 
 bustype = 'socketcan'
