@@ -1,6 +1,18 @@
 from pyModbusTCP.server import ModbusServer, DataBank
 from pyModbusTCP.client import ModbusClient
 from datetime import datetime
+import socket
+import fcntl
+import struct
+
+
+def get_ip_address(ifname):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(
+        s.fileno(),
+        0x8915,  # SIOCGIFADDR
+        struct.pack('256s', bytes(ifname[:15], 'utf-8'))
+    )[20:24])
 
 
 def write_in_file(file, msg):
@@ -24,6 +36,8 @@ class CustomDataBank(DataBank):
 
 server = ModbusServer("0.0.0.0", 12345, no_block=True, data_bank=CustomDataBank())
 server.start()
+print(f"### Server started")
+print(f"### The IP of your device is: {get_ip_address('wlan0')}") # wlan0 is the network interface of Raspberry Pi that connects them to the Wi-Fi. Change it according to your own need.
 
 client = None
 
