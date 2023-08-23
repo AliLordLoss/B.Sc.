@@ -1,6 +1,5 @@
 import paho.mqtt.client as mqtt
 from datetime import datetime
-import time
 import os
 from dotenv import load_dotenv
 
