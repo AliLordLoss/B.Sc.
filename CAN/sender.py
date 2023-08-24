@@ -1,0 +1,21 @@
+import can, time, os
+from datetime import datetime, timezone
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
+PERIOD = int(os.environ['PERIOD'])
+
+bustype = 'socketcan'
+channel = 'can0'
+bus = can.interface.Bus(channel=channel, bustype=bustype, bitrate=125000)
+
+try:
+    while True:
+        send_time = datetime.now(timezone.utc).replace(tzinfo=timezone.utc).timestamp()
+        bus.send(can.Message(arbitration_id=0, data=send_time, is_extended_id=False))
+        time.sleep(PERIOD)
+except KeyboardInterrupt:
+    print('### Stopping gracefully...')
+    bus.shutdown()
