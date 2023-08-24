@@ -13,6 +13,7 @@ def rcv(bus):
         receive_time = datetime.now(timezone.utc).replace(tzinfo=timezone.utc).timestamp()
         if data is None:
             continue
+        print(f"### Received at {receive_time:.3f}")
         send_time = struct.unpack("d", data.data)[0]
         with open(FILE_NAME, 'a') as file:
             print(f'{receive_time - send_time:.3f},{send_time:.3f},{receive_time:.3f}', file=file)

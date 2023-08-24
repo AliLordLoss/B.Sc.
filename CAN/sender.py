@@ -15,6 +15,7 @@ try:
     while True:
         send_time = datetime.now(timezone.utc).replace(tzinfo=timezone.utc).timestamp()
         data = struct.pack('d', send_time)
+        print(f"### Sending at {send_time:.3f}")
         bus.send(can.Message(arbitration_id=0, data=data, is_extended_id=False))
         time.sleep(PERIOD)
 except KeyboardInterrupt:
