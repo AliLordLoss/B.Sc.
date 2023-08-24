@@ -1,4 +1,4 @@
-import can, time, os
+import can, time, os, struct
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 
@@ -14,7 +14,8 @@ bus = can.interface.Bus(channel=channel, bustype=bustype, bitrate=125000)
 try:
     while True:
         send_time = datetime.now(timezone.utc).replace(tzinfo=timezone.utc).timestamp()
-        bus.send(can.Message(arbitration_id=0, data=send_time, is_extended_id=False))
+        data = struct.pack('d', send_time)
+        bus.send(can.Message(arbitration_id=0, data=data, is_extended_id=False))
         time.sleep(PERIOD)
 except KeyboardInterrupt:
     print('### Stopping gracefully...')

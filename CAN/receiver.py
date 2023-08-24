@@ -25,7 +25,7 @@ channel = 'can0'
 bus = can.interface.Bus(channel=channel, bustype=bustype, bitrate=125000)
 
 try:
-    rcv()
+    rcv(bus)
 except KeyboardInterrupt:
     print('### Stopping gracefully...')
     bus.shutdown()
