@@ -16,7 +16,7 @@ class CustomDataBank(DataBank):
         
         send_time = struct.unpack("d", bytes(word_list))[0]
         with open(FILE_NAME, 'a') as file:
-            print(f'{receive_time - send_time},{send_time},{receive_time}', file=file)
+            print(f'{receive_time - send_time:.3f},{send_time:.3f},{receive_time:.3f}', file=file)
         
         return super().set_holding_registers(address, word_list, srv_info)
 
