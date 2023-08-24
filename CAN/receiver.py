@@ -1,4 +1,4 @@
-import can, os
+import can, os, struct
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 
@@ -13,7 +13,7 @@ def rcv(bus):
         receive_time = datetime.now(timezone.utc).replace(tzinfo=timezone.utc).timestamp()
         if data is None:
             continue
-        send_time = data.data
+        send_time = struct.unpack("d", data.data)[0]
         with open(FILE_NAME, 'a') as file:
             print(f'{receive_time - send_time},{send_time},{receive_time}', file=file)
 
