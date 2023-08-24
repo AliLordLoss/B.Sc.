@@ -15,7 +15,7 @@ def rcv(bus):
             continue
         send_time = struct.unpack("d", data.data)[0]
         with open(FILE_NAME, 'a') as file:
-            print(f'{receive_time - send_time},{send_time},{receive_time}', file=file)
+            print(f'{receive_time - send_time:.3f},{send_time:.3f},{receive_time:.3f}', file=file)
 
 with open(FILE_NAME, 'w') as file:
     print('delay,send_time,receive_time', file=file)
